@@ -24,7 +24,10 @@
     "require-dev": {
         "orchestra/testbench": "~3.0",
         "phpunit/phpunit": "~4.0 || ~5.0",
-        "dingo/api": "1.0.*@dev"
+        "dingo/api": "1.0.*@dev",
+        "sensiolabs/security-checker": "^3.0",
+        "phpro/grumphp": "^0.9.1",
+        "squizlabs/php_codesniffer": "^2.6"
     },
     "autoload": {
         "psr-0": {

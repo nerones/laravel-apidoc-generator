@@ -17,7 +17,7 @@ class GenerateDocumentation extends Command
      *
      * @var string
      */
-    protected $signature = 'api:generate 
+    protected $signature = 'api:generate
                             {--output=public/docs : The output path for the generated documentation}
                             {--routePrefix= : The route prefix to use for generation}
                             {--routes=* : The route names to use for generation}
@@ -149,7 +149,7 @@ class GenerateDocumentation extends Command
     private function getRoutes()
     {
         if ($this->option('router') === 'laravel') {
-            return Route::getRoutes();
+            return app()->getRoutes();
         } else {
             return app('Dingo\Api\Routing\Router')->getRoutes()[$this->option('routePrefix')];
         }
@@ -168,7 +168,10 @@ class GenerateDocumentation extends Command
         $routes = $this->getRoutes();
         $bindings = $this->getBindings();
         $parsedRoutes = [];
+
         foreach ($routes as $route) {
+            $route = new \Mpociot\ApiDoc\Helpers\Route($route);
+            //TODO si la ruta esta definida con un primer slash la routePrefix tambien debe estar con un primer slash
             if (in_array($route->getName(), $allowedRoutes) || str_is($routePrefix, $route->getUri())) {
                 if ($this->isValidRoute($route)) {
                     $parsedRoutes[] = $generator->processRoute($route, $bindings, $withResponse);
@@ -196,7 +199,9 @@ class GenerateDocumentation extends Command
         $bindings = $this->getBindings();
         $parsedRoutes = [];
         foreach ($routes as $route) {
-            if (empty($allowedRoutes) || in_array($route->getName(), $allowedRoutes) || str_is($routePrefix, $route->uri())) {
+            if (empty($allowedRoutes)
+                || in_array($route->getName(), $allowedRoutes)
+                || str_is($routePrefix, $route->uri())) {
                 $parsedRoutes[] = $generator->processRoute($route, $bindings, $withResponse);
                 $this->info('Processed route: '.$route->uri());
             }

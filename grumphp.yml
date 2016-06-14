@@ -1,0 +1,25 @@
+parameters:
+    git_dir: .
+    bin_dir: vendor/bin
+    tasks:
+      composer: ~
+      git_blacklist:
+            keywords:
+                - " die("
+                - " var_dump("
+                - " exit;"
+                - " dd("
+                - "^die("
+                - "^var_dump("
+                - "^exit;"
+                - "^dd("
+            triggered_by: [php]
+      phpcs:
+            standard: PSR2
+            show_warnings: true
+            tab_width: 4
+            ignore_patterns: ['tests/*']
+            sniffs: []
+            triggered_by: [php]
+      securitychecker: ~
+      yamllint: ~

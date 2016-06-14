@@ -67,9 +67,15 @@ class LaravelGenerator extends AbstractGenerator
      *
      * @return \Illuminate\Http\Response
      */
-    public function callRoute($method, $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null)
-    {
-        $kernel = App::make('Illuminate\Contracts\Http\Kernel');
+    public function callRoute(
+        $method,
+        $uri,
+        $parameters = [],
+        $cookies = [],
+        $files = [],
+        $server = [],
+        $content = null
+    ) {
         App::instance('middleware.disable', true);
 
         $server = [
@@ -78,14 +84,17 @@ class LaravelGenerator extends AbstractGenerator
         ];
 
         $request = Request::create(
-            $uri, $method, $parameters,
-            $cookies, $files, $this->transformHeadersToServerVars($server), $content
+            $uri,
+            $method,
+            $parameters,
+            $cookies,
+            $files,
+            $this->transformHeadersToServerVars($server),
+            $content
         );
 
-        $response = $kernel->handle($request);
-
-        $kernel->terminate($request, $response);
-
-        return $response;
+        return app()->prepareResponse(
+            app()->handle($request)
+        );
     }
 }
